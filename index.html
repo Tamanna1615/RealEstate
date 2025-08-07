@@ -1,18 +1,469 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lama Real Estate UI</title>
-    <meta name="description" content="Buy, Sell and Rent Properties" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bharat Properties | Find Your Dream Home in India</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body class="bg-gray-50">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <img src="https://placehold.co/40x40/1a1a1a/ffffff?text=BP" onerror="this.onerror=null; this.src='https://placehold.co/40x40/1a1a1a/ffffff?text=BP';" alt="Bharat Properties logo with a house icon" class="h-8 w-auto rounded-full">
+                        <span class="ml-2 text-xl font-bold text-gray-900">Bharat Properties</span>
+                    </div>
+                </div>
+                <div class="hidden md:ml-6 md:flex md:items-center md:space-x-8">
+                    <a href="#featured" class="text-gray-800 hover:text-black px-3 py-2 text-sm font-medium">Properties</a>
+                    <a href="#neighborhoods" class="text-gray-800 hover:text-black px-3 py-2 text-sm font-medium">Neighborhoods</a>
+                    <a href="#map-container" class="text-gray-800 hover:text-black px-3 py-2 text-sm font-medium">Map View</a>
+                    <a href="#agents" class="text-gray-800 hover:text-black px-3 py-2 text-sm font-medium">Agents</a>
+                    <a href="#contact" class="text-gray-800 hover:text-black px-3 py-2 text-sm font-medium">Contact</a>
+                    <button id="authButton" class="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150">
+                        Sign In
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="relative bg-gray-100">
+        <div class="absolute inset-0">
+
+            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/699860bd-3282-401e-9476-a6923d461035.png" onerror="this.onerror=null; this.src='https://placehold.co/1920x1080/0e1e40/a2d2ff?text=Luxury+Home+in+India';" alt="Luxury modern home with large windows, pool, and landscaped garden in sunset light" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gray-900 opacity-60"></div>
+        </div>
+        <div class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
+
+            <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Find Your Perfect Home in Bharat
+            </h1>
+            <p class="mt-6 max-w-3xl text-xl text-gray-100">
+                Discover premium properties and investment opportunities across India.
+            </p>
+            <div class="mt-10 search-container bg-white p-6 rounded-lg shadow-xl">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label for="locationFilter" class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                        <select id="locationFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <option value="All">All Cities</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Bengaluru">Bengaluru</option>
+                            <option value="Pune">Pune</option>
+                            <option value="Jaipur">Jaipur</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="propertyTypeFilter" class="block text-sm font-medium text-gray-700 mb-1">Property Type</label>
+                        <select id="propertyTypeFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <option value="All">Any Type</option>
+                            <option value="Apartment">Apartment</option>
+                            <option value="Villa">Villa</option>
+                            <option value="Bungalow">Bungalow</option>
+                            <option value="Plot">Plot</option>
+                            <option value="Farmhouse">Farmhouse</option>
+                            <option value="Penthouse">Penthouse</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="priceRangeFilter" class="block text-sm font-medium text-gray-700 mb-1">Price Range</label>
+                        <select id="priceRangeFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <option value="All">Any Price</option>
+                            <option value="under_1Cr">Under ₹1 Cr</option>
+                            <option value="1Cr_to_5Cr">₹1 Cr - ₹5 Cr</option>
+                            <option value="over_5Cr">Over ₹5 Cr</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button id="search-properties-button" class="w-full bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150">
+                            Search Properties
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="featured" class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                Featured Properties
+            </h2>
+            <p class="mt-4 text-xl text-gray-600">
+                Browse our curated selection of premium homes in India
+            </p>
+        </div>
+        
+        <div id="property-listings" class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+        
+        <div class="mt-12 text-center">
+            <button id="viewAllPropertiesBtn" class="px-6 py-3 border border-gray-300 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 transition duration-150">
+                View All Properties
+            </button>
+        </div>
+    </section>
+
+    <section id="neighborhoods" class="bg-gray-100 py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                    Neighborhood Guides
+                </h2>
+                <p class="mt-4 text-xl text-gray-600">
+                    Explore the best places to live in India
+                </p>
+            </div>
+            
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="relative rounded-lg overflow-hidden bg-white shadow-md transition duration-300 hover:shadow-xl">
+                    <img src="mumbai_urban.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x400/5c6ac4/ffffff?text=Mumbai+City';" alt="Vibrant downtown cityscape of Mumbai" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900">Mumbai's Urban Hubs</h3>
+                        <p class="mt-2 text-gray-600">Experience the pulse of the city with luxury apartments and vibrant markets.</p>
+                        <div class="mt-4 grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Avg. Price:</p>
+                                <p class="font-bold">₹1.5 Cr</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Amenities Score:</p>
+                                <p class="font-bold">9/10</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative rounded-lg overflow-hidden bg-white shadow-md transition duration-300 hover:shadow-xl">
+                    <img src="bengalore.webp" onerror="this.onerror=null; this.src='https://placehold.co/600x400/5c6ac4/ffffff?text=Bengaluru+Suburb';" alt="Green and quiet suburban street in Bengaluru" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900">Bengaluru's Tech Corridors</h3>
+                        <p class="mt-2 text-gray-600">Modern living with easy access to tech parks and excellent schools.</p>
+                        <div class="mt-4 grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Avg. Price:</p>
+                                <p class="font-bold">₹85 Lac</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">School Rating:</p>
+                                <p class="font-bold">9.5/10</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative rounded-lg overflow-hidden bg-white shadow-md transition duration-300 hover:shadow-xl">
+                    <img src="delhi_historic.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x400/5c6ac4/ffffff?text=Delhi+Historic';" alt="Historic monuments in Delhi with lush greenery" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900">Delhi's Historic Enclaves</h3>
+                        <p class="mt-2 text-gray-600">Exclusive properties in prestigious neighborhoods with rich cultural heritage.</p>
+                        <div class="mt-4 grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Avg. Price:</p>
+                                <p class="font-bold">₹2.5 Cr</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Days on Market:</p>
+                                <p class="font-bold">45</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="map-container" class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                Interactive Property Map
+            </h2>
+            <p class="mt-4 text-xl text-gray-600">
+                Explore available properties visually across India
+            </p>
+        </div>
+        <div class="relative h-[600px] rounded-lg overflow-hidden">
+            <div id="map" class="w-full h-full rounded-lg z-0"></div>
+            <div class="absolute top-4 left-4 bg-white p-2 rounded-lg shadow-lg z-10 flex space-x-2">
+                <button data-filter="All" class="px-3 py-1 text-xs bg-gray-900 text-white rounded hover:bg-gray-800 transition duration-150">All</button>
+                <button data-filter="Apartment" class="px-3 py-1 text-xs bg-white text-gray-800 border border-gray-300 rounded hover:bg-gray-100 transition duration-150">Apartments</button>
+                <button data-filter="Villa" class="px-3 py-1 text-xs bg-white text-gray-800 border border-gray-300 rounded hover:bg-gray-100 transition duration-150">Villas</button>
+                <button data-filter="Bungalow" class="px-3 py-1 text-xs bg-white text-gray-800 border border-gray-300 rounded hover:bg-gray-100 transition duration-150">Bungalows</button>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="agents" class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                Our Top Agents
+            </h2>
+            <p class="mt-4 text-xl text-gray-600">
+                Connect with our experienced real estate professionals
+            </p>
+        </div>
+        
+        <div id="agent-listings" class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+            </div>
+    </section>
+
+    <section class="bg-gray-800 py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+                    Client Testimonials
+                </h2>
+                <p class="mt-4 text-xl text-gray-200">
+                    Hear from our happy homeowners
+                </p>
+            </div>
+            
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="flex items-center">
+                        <img src="https://placehold.co/60x60/b0b5bd/ffffff?text=R" onerror="this.onerror=null; this.src='https://placehold.co/60x60/b0b5bd/ffffff?text=R';" alt="Portrait of happy male homeowner Ramesh" class="w-12 h-12 rounded-full object-cover">
+                        <div class="ml-4">
+                            <h4 class="font-bold text-gray-900">Ramesh Kumar</h4>
+                            <p class="text-gray-600">Mumbai</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-gray-700 italic">
+                        "Bharat Properties made buying our dream home so easy. Their agent understood exactly what we were looking for and found properties we never would have discovered on our own."
+                    </p>
+                    <div class="mt-4 text-yellow-400">★★★★★</div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="flex items-center">
+                        <img src="https://placehold.co/60x60/b0b5bd/ffffff?text=J" onerror="this.onerror=null; this.src='https://placehold.co/60x60/b0b5bd/ffffff?text=J';" alt="Portrait of young couple Jay and Aditi" class="w-12 h-12 rounded-full object-cover">
+                        <div class="ml-4">
+                            <h4 class="font-bold text-gray-900">Jay & Aditi</h4>
+                            <p class="text-gray-600">Bengaluru</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-gray-700 italic">
+                        "As first-time buyers, we were nervous about the process. Priya guided us through every step and negotiated a great deal on our perfect starter home."
+                    </p>
+                    <div class="mt-4 text-yellow-400">★★★★★</div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="flex items-center">
+                        <img src="https://placehold.co/60x60/b0b5bd/ffffff?text=S" onerror="this.onerror=null; this.src='https://placehold.co/60x60/b0b5bd/ffffff?text=S';" alt="Portrait of retired woman Sarita" class="w-12 h-12 rounded-full object-cover">
+                        <div class="ml-4">
+                            <h4 class="font-bold text-gray-900">Sarita Kapoor</h4>
+                            <p class="text-gray-600">Delhi</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-gray-700 italic">
+                        "After 30 years in my family home, selling was emotional. The Bharat team handled everything with care and got me top value - now I'm enjoying retirement in my perfect apartment."
+                    </p>
+                    <div class="mt-4 text-yellow-400">★★★★★</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <div class="bg-gray-100 rounded-xl p-8 md:p-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                        Get in Touch
+                    </h2>
+                    <p class="mt-4 text-xl text-gray-600">
+                        Our team is ready to help you find your perfect property
+                    </p>
+                    
+                    <div class="mt-8 space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                                </svg>
+                            </div>
+                            <p class="ml-3 text-base text-gray-700">
+                                <span class="block font-medium">Email</span>
+                                <a href="mailto:contact@bharatproperties.com" class="block underline hover:text-gray-900 transition">contact@bharatproperties.com</a>
+                            </p>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.774a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.06-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.163 18 3 13.837 3 8V6a1 1 0 011-1h2.153z"/>
+                                </svg>
+                            </div>
+                            <p class="ml-3 text-base text-gray-700">
+                                <span class="block font-medium">Phone</span>
+                                <a href="tel:+911234567890" class="block underline hover:text-gray-900 transition">+91 12345 67890</a>
+                            </p>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <p class="ml-3 text-base text-gray-700">
+                                <span class="block font-medium">Headquarters</span>
+                                <span class="block">Level 1, Business Bay, Andheri</span>
+                                <span class="block">Mumbai, Maharashtra, India</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <form class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                            <input type="text" id="name" name="name" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500" placeholder="Your Name">
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" id="email" name="email" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500" placeholder="you@example.com">
+                        </div>
+                        
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                            <input type="tel" id="phone" name="phone" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500" placeholder="+91 98765 43210">
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700">How can we help?</label>
+                            <textarea id="message" name="message" rows="4" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500" placeholder="I'm interested in properties in..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+                <div>
+                    <h3 class="text-lg font-semibold mb-2">Bharat Properties</h3>
+                    <p class="text-gray-400 text-sm">Find your dream home in India.</p>
+                </div>
+                <div class="mt-6 md:mt-0 flex space-x-6">
+                    <a href="mailto:contact@bharatproperties.com" class="text-gray-400 hover:text-white text-sm underline">contact@bharatproperties.com</a>
+                    <span class="text-gray-400 text-sm">|</span>
+                    <a href="tel:+911234567890" class="text-gray-400 hover:text-white text-sm">+91 12345 67890</a>
+                </div>
+            </div>
+            <div class="mt-6 border-t border-gray-800 pt-4 w-full">
+                <p class="text-gray-400 text-xs text-center w-full">
+                    © 2024 Bharat Properties. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="authModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden modal-overlay p-4">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm relative modal-content overflow-y-auto max-h-screen">
+            <button id="closeAuthModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+            <h2 id="modalTitle" class="text-2xl font-bold text-center text-gray-800 mb-6">Sign In</h2>
+            
+            <div id="successMessage" class="hidden bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded" role="alert">
+                <p class="font-bold">Success!</p>
+                <p>Account created successfully. Please sign in.</p>
+            </div>
+            <div id="errorMessage" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded" role="alert">
+                <p class="font-bold">Error!</p>
+                <p id="errorText"></p>
+            </div>
+
+            <form id="loginForm" class="space-y-6">
+                <div class="mb-4">
+                    <label for="loginEmail" class="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
+                    <input type="email" id="loginEmail" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="you@example.com" required>
+                </div>
+                <div class="mb-6">
+                    <label for="loginPassword" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <input type="password" id="loginPassword" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="" required>
+                    <a href="#" class="inline-block align-baseline font-bold text-sm text-gray-500 hover:text-gray-800">Forgot Password?</a>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+                        Sign In
+                    </button>
+                </div>
+                <p class="text-center text-gray-600 text-xs mt-4">
+                    Don't have an account? <a href="#" id="showRegisterLink" class="text-gray-500 hover:text-gray-800">Register now</a>.
+                </p>
+            </form>
+
+            <form id="registerForm" class="space-y-6 hidden">
+                <div class="mb-4">
+                    <label for="registerName" class="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
+                    <input type="text" id="registerName" name="fullName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="John Doe" required>
+                </div>
+                <div class="mb-4">
+                    <label for="registerEmail" class="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
+                    <input type="email" id="registerEmail" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="you@example.com" required>
+                </div>
+                <div class="mb-4">
+                    <label for="registerPassword" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <input type="password" id="registerPassword" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="" required>
+                </div>
+                <div class="mb-6">
+                    <label for="confirmPassword" class="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+                        Create Account
+                    </button>
+                </div>
+                <p class="text-center text-gray-600 text-xs mt-4">
+                    Already have an account? <a href="#" id="showLoginLink" class="text-gray-500 hover:text-gray-800">Sign In</a>.
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div id="propertyDetailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden modal-overlay p-4">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl relative modal-content overflow-y-auto max-h-screen">
+            <button id="closePropertyDetailsModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+            <div id="propertyDetailsContent" class="text-gray-800">
+                </div>
+        </div>
+    </div>
+
+    <div id="agentDetailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden modal-overlay p-4">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm relative modal-content overflow-y-auto max-h-screen">
+            <button id="closeAgentDetailsModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+            <div id="agentDetailsContent" class="text-gray-800 text-center">
+                </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
 </html>

@@ -1,0 +1,272 @@
+:root {
+  /* New Colors */
+  --color-primary: #0A0E23;        /* Dark Blue */
+  --color-secondary: #4A729A;      /* Muted Medium Blue */
+  --color-button-accent: #000000;  /* Pure Black for Buttons */
+  --color-text-dark: #0A0E23;      /* Dark Blue Text */
+  --color-text-light: #ffffff;     /* Light Text */
+  --color-background-light: #F5F8FC; /* Off-White with Blue Tint */
+  --color-background-secondary: #E3EBF4; /* Light Blue Gray */
+  --color-surface-light: rgba(255, 255, 255, 0.9); /* Light Glass Surface */
+  --color-surface-hover-light: rgba(255, 255, 255, 0.98); /* Light Glass Hover */
+  --color-border-light: #e0e6ec;   /* Light Gray Border */
+  --color-success: #6CB28E;        /* Muted Green for Success */
+  --color-success-bg: #D4F0E2;     /* Success Background */
+
+  /* Shadows */
+  --shadow-card-sm: 0 8px 32px 0 rgba(10, 14, 35, 0.1), 0 1.5px 8px 0 rgba(74, 114, 154, 0.08);
+  --shadow-card-hover-lg: 0 16px 48px 0 rgba(10, 14, 35, 0.15), 0 4px 16px 0 rgba(74, 114, 154, 0.12);
+  --shadow-button: 0 2px 8px 0 rgba(0, 0, 0, 0.3);
+  --shadow-button-hover: 0 6px 24px 0 rgba(0, 0, 0, 0.45);
+  --shadow-modal: 0 8px 32px 0 rgba(10, 14, 35, 0.18);
+  --shadow-hero-search: 0 8px 32px 0 rgba(10, 14, 35, 0.2);
+
+  /* Transitions & Animation */
+  --transition-fast: 0.2s ease-out;
+  --transition-default: 0.3s ease-in-out;
+  --transition-image: 0.4s cubic-bezier(.4, 2, .6, 1);
+  --animation-fade-up: fadeInUp 0.7s cubic-bezier(.4, 2, .6, 1);
+}
+
+/* ==========================================================================
+   2. Dark Mode
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text-dark: #F5F8FC;
+    --color-text-light: #0A0E23;
+    --color-background-light: #0E142F;
+    --color-background-secondary: #171E40;
+    --color-surface-light: rgba(14, 20, 47, 0.75);
+    --color-surface-hover-light: rgba(14, 20, 47, 0.9);
+    --color-border-light: #333d6b;
+    --color-success-bg: #1f3a2c;
+    --shadow-card-sm: 0 8px 32px 0 rgba(255, 255, 255, 0.08), 0 1.5px 8px 0 rgba(74, 114, 154, 0.05);
+    --shadow-card-hover-lg: 0 16px 48px 0 rgba(255, 255, 255, 0.15), 0 4px 16px 0 rgba(74, 114, 154, 0.09);
+    --shadow-button: 0 2px 8px 0 rgba(255, 255, 255, 0.07);
+    --shadow-button-hover: 0 6px 24px 0 rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* ==========================================================================
+   3. Base Styles
+   ========================================================================== */
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, var(--color-background-light) 0%, var(--color-background-secondary) 100%);
+  min-height: 100vh;
+  color: var(--color-text-dark);
+  transition: background var(--transition-default), color var(--transition-default);
+}
+
+h1, h2, h3 {
+  letter-spacing: -0.5px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ==========================================================================
+   4. Glassmorphism Card
+   ========================================================================== */
+.property-card {
+  background: var(--color-surface-light);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-card-sm);
+  border: 1.5px solid var(--color-border-light);
+  backdrop-filter: blur(10px);
+  transition: box-shadow var(--transition-default), transform var(--transition-default), border var(--transition-default), background var(--transition-default);
+  overflow: hidden;
+  position: relative;
+  animation: var(--animation-fade-up);
+}
+
+.property-card:hover {
+  box-shadow: var(--shadow-card-hover-lg);
+  border-color: var(--color-primary);
+  transform: translateY(-10px) scale(1.04);
+  background: var(--color-surface-hover-light);
+}
+
+.property-card .property-image {
+  border-radius: 1.5rem 1.5rem 0 0;
+  transition: transform 0.4s cubic-bezier(.4, 2, .6, 1), filter var(--transition-default);
+}
+
+.property-card:hover .property-image {
+  transform: scale(1.09) rotate(-2deg);
+  filter: brightness(1.15) saturate(1.18);
+}
+
+/* Unique accent for badges */
+.property-card .absolute.bg-blue-600 {
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%) !important;
+  box-shadow: var(--shadow-button);
+  letter-spacing: 1px;
+}
+
+/* ==========================================================================
+   5. Hero Section
+   ========================================================================== */
+.relative.bg-blue-50 > .absolute > .absolute {
+  background: linear-gradient(120deg, var(--color-primary) 60%, var(--color-secondary) 100%);
+  opacity: 0.85 !important;
+}
+
+.search-container {
+  background: var(--color-surface-light);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-hero-search);
+  border: 1.5px solid var(--color-border-light);
+  backdrop-filter: blur(8px);
+  animation: var(--animation-fade-up);
+}
+
+/* ==========================================================================
+   6. Buttons & Links
+   ========================================================================== */
+button, .view-details-button {
+  background: var(--color-button-accent);
+  color: var(--color-text-light);
+  border: none;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-button);
+  transition: background var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+button:hover, .view-details-button:hover {
+  background: var(--color-button-accent);
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: var(--shadow-button-hover);
+  filter: brightness(1.10);
+}
+
+/* ==========================================================================
+   7. Form Inputs
+   ========================================================================== */
+input, select, textarea {
+  background: var(--color-surface-hover-light);
+  border: 1.5px solid var(--color-border-light);
+  border-radius: 0.75rem;
+  transition: border var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(10, 14, 35, 0.35);
+  background: #fff;
+}
+
+/* ==========================================================================
+   8. Section Backgrounds & Footer
+   ========================================================================== */
+section.bg-gray-100 {
+  background: linear-gradient(120deg, var(--color-background-light) 80%, var(--color-background-secondary) 100%);
+}
+
+section.bg-blue-700 {
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}
+
+footer {
+  background: linear-gradient(90deg, var(--color-text-dark) 0%, var(--color-secondary) 100%);
+  color: var(--color-text-light);
+  border-top-left-radius: 2rem;
+  border-top-right-radius: 2rem;
+  box-shadow: 0 -4px 32px 0 rgba(10, 14, 35, 0.1);
+  transition: background var(--transition-default);
+}
+
+footer a {
+  transition: color var(--transition-fast);
+}
+
+footer a:hover {
+  color: var(--color-text-light);
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   9. Testimonials
+   ========================================================================== */
+.bg-white.p-6.rounded-lg.shadow-lg {
+  border: 1.5px solid var(--color-border-light);
+  background: linear-gradient(120deg, var(--color-surface-light) 80%, var(--color-background-light) 100%);
+  box-shadow: 0 4px 24px 0 rgba(10, 14, 35, 0.1);
+  border-radius: 1.25rem;
+  animation: var(--animation-fade-up);
+}
+
+/* ==========================================================================
+   10. Modals
+   ========================================================================== */
+.modal-overlay {
+  z-index: 1000;
+  background: rgba(10, 14, 35, 0.85);
+  backdrop-filter: blur(6px);
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-modal);
+  border: 1.5px solid var(--color-border-light);
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: var(--animation-fade-up);
+}
+
+/* Custom scrollbar for modals */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+  background: var(--color-border-light);
+  border-radius: 8px;
+}
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 8px;
+}
+
+/* ==========================================================================
+   11. Success Message
+   ========================================================================== */
+#successMessage {
+  border-left-width: 6px;
+  border-radius: 0.75rem;
+  background: linear-gradient(90deg, var(--color-success-bg) 60%, var(--color-background-light) 100%);
+  color: var(--color-success);
+}
+
+/* ==========================================================================
+   12. Map Container
+   ========================================================================== */
+#map-container {
+  /* height: 400px; */ /* Commented out to allow Tailwind CSS to control height */
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px 0 rgba(10, 14, 35, 0.1);
+  overflow: hidden;
+  background: linear-gradient(120deg, var(--color-background-secondary) 80%, var(--color-background-light) 100%);
+}
+/* ==========================================================================
+   13. Animations
+   ========================================================================== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   14. Responsive Tweaks
+   ========================================================================== */
+@media (max-width: 768px) {
+  .property-card, .modal-content, .search-container, .bg-white.p-6.rounded-lg.shadow-lg {
+    border-radius: 1rem;
+  }
+  #map-container {
+    border-radius: 1rem;
+  }
+  footer {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+  }
+}
